@@ -1,5 +1,5 @@
-var height = 800;
-var width = 300;
+var height = 300;
+var width = 500;
 
 var layer1;
 var layer2;
