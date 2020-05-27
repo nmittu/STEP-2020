@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Gallery</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fun.css">
+    <script src="script.js"></script>
+    <script src="fun.js"></script>
+  </head>
+  <body onload="setUp();">
+    <header>
+      <div id="header-content">
+        <h1>Image Gallery</h1>
+      </div>
+    </header>
+    <nav>
+      <a href="index.html"><b>About Me</b></a>
+      <a href="gallery.html"><b>Gallery</b></a>
+      <a href="fun.html"><b>Fun</b></a>
+      <a href="https://www.linkedin.com/in/nikhil-mittu-313a29181"><b>LinkedIn</b></a>
+      <a href="https://github.com/nmittu"><b>GitHub</b></a>
+    </nav>
+    <div id="content">
+      <p>Heres a fun pendulum simulation I made using javascript!</p>
+      <div id="pendulum">
+        <canvas id="layer1" width="800" height="300" 
+          style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+        <canvas id="layer2" width="800" height="300" 
+          style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+      </div>
+
+     	<button onclick="start()">Start</button>
+      <button onclick="stop()">Stop</button>
+    
+    </div>
+  </body>
+</html>
