@@ -28,3 +28,28 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
+var popup;
+var popup_img
+
+function showPopUp() {
+  popup.style.display = "block";
+  popup_img.src = this.src
+}
+
+function onLoad() {
+  popup = document.getElementsByClassName("image-popup-container")[0];
+  popup_img = document.getElementsByClassName("image-popup")[0];
+
+  var images = document.getElementsByTagName("img");
+
+
+  for(image of images) {
+    image.onclick = showPopUp;
+  }
+
+  var close_button = document.getElementsByClassName("close")[0];
+
+  close_button.onclick = function() {
+    popup.style.display = "none";
+  }
+}

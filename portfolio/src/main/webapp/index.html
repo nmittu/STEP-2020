@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="onLoad();">
     <header>  
       <div id="header-content" class="center-v">
         <h1>Nick's Portfolio</h1>
@@ -70,6 +70,10 @@
       <p>Click here to get a random fact about me:</p>
       <button onclick="addRandomFact()">Get a fact!</button>
       <div id="fact-container"></div>
+    </div>
+    <div class="image-popup-container">
+      <span class="close">&times;</span>
+      <img class="image-popup"/>
     </div>
   </body>
 </html>
