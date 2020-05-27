@@ -105,3 +105,17 @@ a {
 a:hover {
   color: #35A7FF;
 }
+
+#hobbies-container img {
+    float: right;
+    margin: 3px;
+}
+
+#hobbies-container ul {
+    float: left;
+}
+
+#hobbies-container {
+    overflow: auto;
+    margin-bottom: 10px;
+}
