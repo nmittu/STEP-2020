@@ -8,13 +8,69 @@
   </head>
   <body>
     <div id="content">
-      <h1>Nick's Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+      <header>  
+        <h1>Nick's Portfolio</h1>
+      </header>
 
-      <p>Hi! My name is Nick and this is my portfolio!</p>
+      <section>
+        <h3>About me</h3>
+        <p>
+          Hi! My name is Nick and I'm a rising sophomore at the University of Maryland, studying computer science and Math. 
+          I have had a passion for learning computer science from a very early age. In High School, I loved attending <a href="https://en.wikipedia.org/wiki/Hackathon">hackathons</a> to gain experience coding and working on a team.
+          I loved attending hackathons so much that I am now an organizer for two of the student let hackathons at UMD, <a href="https://bit.camp/">Bitcamp</a> and <a href="https://gotechnica.org/">Technica.</a>
+        </p>
+      </section>
+
+      <section>
+        <h3>Professional experience</h3>
+        <ul>
+          <li>
+            <b>NASA GSFC</b>
+            <p>
+              I interned at NASA GSFC every summer between 2017 to 2018 and spring 2020. At NASA
+              I worked on the Goddard Mission Services Evolution Center (<a href="https://gmsec.gsfc.nasa.gov/">GMSEC</a>) team. While working with GMSEC I worked on multiple projects from working on building a continuous integration pipeline
+              to working on a library that converted queries in a custom query language to either SQL or Elasticsearch queries.  
+            </p>
+          </li>
+          <li>
+            <b>MyMCPS Helper</b>
+            <p>
+              During my sophomore year of high school I built an app called <a href="https://github.com/nmittu/MyMCPS-Helper">MyMCPS Helper</a>. 
+              The app is used by students in my school system to check their grades and enter hypothetical grades and assignments to see how they would affect their overall grade.
+              The app has over 10,000 downloads across the Google Play Store and the Apple Appstore.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Hobbies</h3>
+
+        <p>Outside of coding, I have many hobbies including:</p>
+        <ul>
+          <li>
+            <p>Rock climbing</p>
+            <img src="images/image2.jpg" alt="Rock climbing picture" height="200"/>
+          </li>
+          <li>Biking</li>
+          <li>
+            <p>Playing trumpet</p>
+            <img src="images/image9.png" alt="Picture of me playing trumpet" height="200"/>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3><a href="gallery.html">Gallery</a></h3>
+      </section>
+
+      <p>Click here to get a random fact about me:</p>
+      <button onclick="addRandomFact()">Get a fact!</button>
+      <div id="fact-container"></div>
+
+      <section>
+        <h3><a href="https://www.linkedin.com/in/nikhil-mittu-313a29181">LinkedIn</a> and <a href="https://github.com/nmittu">GitHub</a></h3>
+      </section>
     </div>
   </body>
 </html>
