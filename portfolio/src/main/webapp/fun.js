@@ -26,15 +26,24 @@ function setUp() {
   reset();
 }
 
+function valueChange() {
+    reset();
+
+    document.getElementById("m1-val").innerHTML = document.getElementById("m1").value;
+    document.getElementById("m2-val").innerHTML = document.getElementById("m2").value;
+    document.getElementById("theta1-val").innerHTML = document.getElementById("theta1").value;
+    document.getElementById("theta2-val").innerHTML = document.getElementById("theta2").value;
+}
+
 function reset() {
-    theta1 = 3.14/2;
-    theta2 = 2.5;
+    theta1 = parseFloat(document.getElementById("theta1").value);
+    theta2 = parseFloat(document.getElementById("theta2").value);
     omega1 = 0;
     omega2 = 0;
     l1 = 100;
     l2 = 100;
-    m1 = 10;
-    m2 = 5;
+    m1 = parseFloat(document.getElementById("m1").value);
+    m2 = parseFloat(document.getElementById("m2").value);
     g = 1;
 
     stop();
