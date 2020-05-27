@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>Gallery</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="onLoad();">
     <header>
       <div id="header-content">
         <h1>Image Gallery</h1>
@@ -14,19 +15,26 @@
     <nav>
       <a href="index.html"><b>About Me</b></a>
       <a href="gallery.html"><b>Gallery</b></a>
+      <a href="https://www.linkedin.com/in/nikhil-mittu-313a29181"><b>LinkedIn</b></a>
+      <a href="https://github.com/nmittu"><b>GitHub</b></a>
     </nav>
     <div id="content">
       <div class="image-thumbnails">
-          <a href="images/image1.jpg"><img src="images/image1.jpg"/></a>
-          <a href="images/image2.jpg"><img src="images/image2.jpg"/></a>
-          <a href="images/image3.png"><img src="images/image3.png"/></a>
-          <a href="images/image4.png"><img src="images/image4.png"/></a>
-          <a href="images/image5.jpg"><img src="images/image5.jpg"/></a>
-          <a href="images/image6.jpg"><img src="images/image6.jpg"/></a>
-          <a href="images/image7.jpg"><img src="images/image7.jpg"/></a>
-          <a href="images/image8.jpg"><img src="images/image8.jpg"/></a>
-          <a href="images/image9.png"><img src="images/image9.png"/></a>
+          <span><img src="images/image1.jpg"/></span>
+          <span><img src="images/image2.jpg"/></span>
+          <span><img src="images/image3.png"/></span>
+          <span><img src="images/image4.png"/></span>
+          <span><img src="images/image5.jpg"/></span>
+          <span><img src="images/image6.jpg"/></span>
+          <span><img src="images/image7.jpg"/></span>
+          <span><img src="images/image8.jpg"/></span>
+          <span><img src="images/image9.png"/></span>
       </div>
+    </div>
+
+    <div class="image-popup-container">
+      <span class="close">&times;</span>
+      <img class="image-popup"/>
     </div>
   </body>
 </html>
