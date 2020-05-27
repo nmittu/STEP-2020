@@ -11,7 +11,7 @@ var omega2 = 0;
 var l1 = 100;
 var l2 = 100;
 var m1 = 10;
-var m2 = 10;
+var m2 = 5;
 var g = 1;
 
 var x2;
@@ -68,7 +68,7 @@ function draw() {
   theta2 += omega2;
 
   if (running) {
-    setTimeout(draw, 50);
+    setTimeout(draw, 25);
   }
 }
 
