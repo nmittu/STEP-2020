@@ -1,5 +1,5 @@
 body {
-    margin: 0;
+  margin: 0;
 }
 
 h1, h2, h3, h4, p {
@@ -49,4 +49,18 @@ header div {
   height: auto;
   vertical-align: middle;
   display: table-cell;
+  text-align: center;
+}
+
+nav {
+  width: 100%;
+  height: 50px;
+  display: table;
+  background-color: #0081AF;
+}
+
+nav a {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
