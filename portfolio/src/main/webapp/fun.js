@@ -22,6 +22,24 @@ running = true;
 function setUp() {
   layer1 = document.getElementById("layer1").getContext("2d");
   layer2 = document.getElementById("layer2").getContext("2d");
+
+  reset();
+}
+
+function reset() {
+    theta1 = 3.14/2;
+    theta2 = 2.5;
+    omega1 = 0;
+    omega2 = 0;
+    l1 = 100;
+    l2 = 100;
+    m1 = 10;
+    m2 = 5;
+    g = 1;
+
+    stop();
+    draw();
+    layer2.clearRect(0, 0, width, height);
 }
 
 function draw() {
@@ -29,7 +47,10 @@ function draw() {
   layer1.fillStyle = "#35A7FF";
   layer2.strokeStyle = "#D7263D";
 
-  layer1.clearRect(0, 0, 500, 500);
+  layer1.beginPath()
+  layer2.beginPath()
+
+  layer1.clearRect(0, 0, width, height);
 
   var offsetX = width/2;
   var offsetY = 50;
