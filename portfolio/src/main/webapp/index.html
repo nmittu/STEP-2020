@@ -6,16 +6,23 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
-    <div id="content">
-      <header>  
+  <body onload="onLoad();">
+    <header>  
+      <div id="header-content" class="center-v">
         <h1>Nick's Portfolio</h1>
-      </header>
-
+      </div>
+    </header>
+    <nav>
+      <a href="index.html"><b>About Me</b></a>
+      <a href="gallery.html"><b>Gallery</b></a>
+      <a href="https://www.linkedin.com/in/nikhil-mittu-313a29181"><b>LinkedIn</b></a>
+      <a href="https://github.com/nmittu"><b>GitHub</b></a>
+    </nav>
+    <div id="content">
       <section>
         <h3>About me</h3>
         <p>
-          Hi! My name is Nick and I'm a rising sophomore at the University of Maryland, studying computer science and Math. 
+          Hi! My name is Nick and I'm a rising sophomore at the University of Maryland, studying computer science and math. 
           I have had a passion for learning computer science from a very early age. In High School, I loved attending <a href="https://en.wikipedia.org/wiki/Hackathon">hackathons</a> to gain experience coding and working on a team.
           I loved attending hackathons so much that I am now an organizer for two of the student let hackathons at UMD, <a href="https://bit.camp/">Bitcamp</a> and <a href="https://gotechnica.org/">Technica.</a>
         </p>
@@ -60,17 +67,13 @@
         </ul>
       </section>
 
-      <section>
-        <h3><a href="gallery.html">Gallery</a></h3>
-      </section>
-
       <p>Click here to get a random fact about me:</p>
       <button onclick="addRandomFact()">Get a fact!</button>
       <div id="fact-container"></div>
-
-      <section>
-        <h3><a href="https://www.linkedin.com/in/nikhil-mittu-313a29181">LinkedIn</a> and <a href="https://github.com/nmittu">GitHub</a></h3>
-      </section>
+    </div>
+    <div class="image-popup-container">
+      <span class="close">&times;</span>
+      <img class="image-popup"/>
     </div>
   </body>
 </html>
