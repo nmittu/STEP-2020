@@ -53,3 +53,9 @@ function onLoad() {
     popup.style.display = "none";
   }
 }
+
+function fetchData() {
+    fetch("/data").then(response => response.text()).then(data => {
+        document.getElementById("servlet-response").innerHTML = data;
+    });
+}
