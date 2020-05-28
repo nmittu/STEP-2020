@@ -106,7 +106,14 @@
       </section>
       <section>
           <h3>Servlet response</h3>
-          <div id="servlet-response"></div>
+          <div id="servlet-response">
+            <template id="comment-template">
+              <div class="comment">
+                <h4 id="display-name"></h4>
+                <p id="comment"></p>
+              </div>
+            </template>
+          </div>
 
           <form action="/data" method="POST" class="medium-spacing">
             <input class="medium-spacing" type="text" name="display-name" placeholder="Display Name"/>

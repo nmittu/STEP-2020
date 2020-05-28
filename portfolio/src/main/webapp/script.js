@@ -65,10 +65,13 @@ function fetchData() {
     fetch("/data").then(response => response.json()).then(comments => {
       let commentsContainer = document.getElementById("servlet-response")
       for (let comment of comments) {
-        let commentElement = document.createElement("p");
-        commentElement.innerText = comment;
+        let template = document.getElementById("comment-template");
+        let copy = template.content.cloneNode(true);
 
-        commentsContainer.appendChild(commentElement);
+        copy.getElementById("display-name").innerText = comment.displayName;
+        copy.getElementById("comment").innerText = comment.comment;
+
+        commentsContainer.appendChild(copy);
       }
     });
 }
