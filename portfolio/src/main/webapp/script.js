@@ -53,3 +53,15 @@ function onLoad() {
     popup.style.display = "none";
   }
 }
+
+function fetchData() {
+    fetch("/data").then(response => response.json()).then(comments => {
+      let commentsContainer = document.getElementById("servlet-response")
+      for (let comment of comments) {
+        let commentElement = document.createElement("p");
+        commentElement.innerText = comment;
+
+        commentsContainer.appendChild(commentElement);
+      }
+    });
+}
