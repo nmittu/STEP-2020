@@ -131,3 +131,8 @@ a:hover {
   vertical-align: middle;
   text-align: center;
 }
+
+.medium-spacing {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

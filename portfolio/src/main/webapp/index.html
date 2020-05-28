@@ -108,6 +108,14 @@
           <h3>Servlet response</h3>
           <button onclick="fetchData()">Fetch servlet data</button>
           <div id="servlet-response"></div>
+
+          <form action="/data" method="POST" class="medium-spacing">
+            <input class="medium-spacing" type="text" name="display-name" placeholder="Display Name"/>
+            <br/>
+            <textarea class="medium-spacing" name="comment" placeholder="Comment"></textarea>
+            </br/>
+            <input class="medium-spacing" type="submit"/>
+          </form>
       </section>
     </div>
     <div class="image-popup-container">
