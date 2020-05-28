@@ -107,8 +107,8 @@ a:hover {
 }
 
 #hobbies-container img {
-    float: right;
-    margin: 3px;
+  float: right;
+  margin: 3px;
 }
 
 #hobbies-container ul {
@@ -116,6 +116,18 @@ a:hover {
 }
 
 #hobbies-container {
-    overflow: auto;
-    margin-bottom: 10px;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+#posters {
+  display: table;
+  width: 80%;
+  margin-bottom: 10px;
+}
+
+#posters a {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
