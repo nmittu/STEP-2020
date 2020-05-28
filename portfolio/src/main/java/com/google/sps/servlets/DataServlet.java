@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
+import com.google.sps.comments.Comment;
 import java.util.ArrayList;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -26,13 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private static final ArrayList<String> comments;
+  private final ArrayList<Comment> comments;
 
-  static {
-    comments = new ArrayList();
-    comments.add("Nice portfolio!");
-    comments.add("Hello World!");
-    comments.add("I love json!");
+  public DataServlet() {
+    comments = new ArrayList<>();
   }
 
   @Override
@@ -44,6 +42,25 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String displayName = getParameter(request, "display-name", "");
+    String comment = getParameter(request, "comment", "");
+
+    Comment commentObj = new Comment(displayName, comment);
+
+    comments.add(commentObj);
+    
     response.sendRedirect("index.html");
+  }
+
+  /**
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
