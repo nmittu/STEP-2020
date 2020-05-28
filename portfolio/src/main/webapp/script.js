@@ -28,15 +28,22 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
+
+function onLoad() {
+  setUpImagePopups();
+  fetchData();
+}
+
+
 var popup;
-var popup_img
+var popup_img;
 
 function showPopUp() {
   popup.style.display = "block";
   popup_img.src = this.src
 }
 
-function onLoad() {
+function setUpImagePopups() {
   popup = document.getElementsByClassName("image-popup-container")[0];
   popup_img = document.getElementsByClassName("image-popup")[0];
 
