@@ -110,5 +110,5 @@ function toggleShowMore() {
 
 function deleteComments() {
   let request = new Request("/delete-data", {method: 'POST'});
-  fetch(request).then(resp => resp.text()).then(_ => refreshComments);
+  fetch(request).then(resp => resp.text()).then(_ => refreshComments());
 }

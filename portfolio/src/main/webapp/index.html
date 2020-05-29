@@ -91,7 +91,7 @@
         <h3>Hobbies</h3>
 
         <p>Outside of coding, I have many hobbies including:</p>
-        <div id="hobbies-container">
+        <div id="hobbies-container" class="float-container">
           <ul class="left">
             <li>
               <p>Rock climbing</p>
@@ -118,8 +118,8 @@
             </template>
           </div>
 
-          <div>
-            <button class="left" onclick="deleteComments">
+          <div class="float-container">
+            <button class="left" onclick="deleteComments()">Delete all</button>
             <div class="right">
               <label for="limit">Page limit</label>
               <select id="limit" onchange="refreshComments()">

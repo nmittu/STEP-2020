@@ -125,7 +125,6 @@ a:hover {
 }
 
 #hobbies-container {
-  overflow: auto;
   margin-bottom: 10px;
 }
 
@@ -176,4 +175,8 @@ button:hover, .button:hover {
 
 .left {
   float: left;
+}
+
+.float-container {
+  overflow: auto;
 }
