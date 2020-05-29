@@ -180,3 +180,11 @@ button:hover, .button:hover {
 .float-container {
   overflow: auto;
 }
+
+.fill-width {
+  width: 100%;
+}
+
+#comment-textbox {
+  height: 100px;
+}
