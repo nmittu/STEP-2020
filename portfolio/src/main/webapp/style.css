@@ -11,7 +11,14 @@ h1, h2, h3, h4, p {
 #content, #header-content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  max-width: 650px;
+}
+
+#gallery-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  min-width: 300px;
 }
 
 #header-content {
