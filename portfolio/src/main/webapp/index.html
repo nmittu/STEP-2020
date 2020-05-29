@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nick's Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
@@ -105,9 +106,25 @@
         </div>
       </section>
       <section>
-          <h3>Servlet response</h3>
-          <button onclick="fetchData()">Fetch servlet data</button>
-          <div id="servlet-response"></div>
+          <h3>Comments</h3>
+          <div id="comments-container">
+            <template id="comment-template">
+              <div class="comment">
+                <h4 class="display-name"></h4>
+                <p class="comment-content"></p>
+                <button class="show-more" onclick="toggleShowMore()">Show more</button>
+                <hr/>
+              </div>
+            </template>
+          </div>
+
+          <form action="/data" method="POST" class="medium-spacing">
+            <input class="medium-spacing" type="text" name="display-name" placeholder="Display Name"/>
+            <br/>
+            <textarea class="medium-spacing" name="comment" placeholder="Comment"></textarea>
+            </br/>
+            <input class="medium-spacing button" type="submit"/>
+          </form>
       </section>
     </div>
     <div class="image-popup-container">

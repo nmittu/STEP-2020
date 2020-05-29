@@ -28,15 +28,22 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
+
+function onLoad() {
+  setUpImagePopups();
+  fetchData();
+}
+
+
 var popup;
-var popup_img
+var popup_img;
 
 function showPopUp() {
   popup.style.display = "block";
   popup_img.src = this.src
 }
 
-function onLoad() {
+function setUpImagePopups() {
   popup = document.getElementsByClassName("image-popup-container")[0];
   popup_img = document.getElementsByClassName("image-popup")[0];
 
@@ -56,12 +63,38 @@ function onLoad() {
 
 function fetchData() {
     fetch("/data").then(response => response.json()).then(comments => {
-      let commentsContainer = document.getElementById("servlet-response")
+      let commentsContainer = document.getElementById("comments-container")
       for (let comment of comments) {
-        let commentElement = document.createElement("p");
-        commentElement.innerText = comment;
+        let template = document.getElementById("comment-template");
+        let copy = template.content.cloneNode(true).querySelector(".comment");
 
-        commentsContainer.appendChild(commentElement);
+        copy.querySelector(".display-name").innerText = comment.displayName;
+        let commentElement = copy.querySelector(".comment-content");
+        commentElement.innerText = comment.comment;
+
+        copy.style.visibility = "hidden";
+        commentsContainer.appendChild(copy);
+
+        let showMoreButton = copy.querySelector(".show-more");
+
+        if (commentElement.clientHeight === commentElement.scrollHeight) {
+          showMoreButton.style.display = "none";
+        }
+
+        copy.style.visibility = "";
       }
     });
+}
+
+
+function toggleShowMore() {
+  let commentElement = event.srcElement.parentElement.getElementsByClassName("comment-content")[0];
+
+  if (commentElement.style.maxHeight != "none") {
+    commentElement.style.maxHeight = "none";
+    event.srcElement.innerText = "Hide";
+  } else {
+    commentElement.style.maxHeight = null;
+    event.srcElement.innerText = "Show more";
+  }
 }
