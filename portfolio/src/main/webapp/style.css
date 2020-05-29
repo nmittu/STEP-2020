@@ -121,12 +121,7 @@ a:hover {
 }
 
 #hobbies-container img {
-  float: right;
   margin: 3px;
-}
-
-#hobbies-container ul {
-    float: left;
 }
 
 #hobbies-container {
@@ -173,4 +168,12 @@ button, .button {
 button:hover, .button:hover {
   background-color: #F5F5F5;
   color: #001021
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
 }
