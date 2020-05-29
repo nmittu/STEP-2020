@@ -106,11 +106,13 @@
       </section>
       <section>
           <h3>Servlet response</h3>
-          <div id="servlet-response">
+          <div id="comments-container">
             <template id="comment-template">
               <div class="comment">
-                <h4 id="display-name"></h4>
-                <p id="comment"></p>
+                <h4 class="display-name"></h4>
+                <p class="comment-content"></p>
+                <button class="show-more" onclick="toggleShowMore()">Show more</button>
+                <hr/>
               </div>
             </template>
           </div>

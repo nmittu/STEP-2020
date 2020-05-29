@@ -136,3 +136,13 @@ a:hover {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.comment p {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+#comments-container {
+  max-height: 500px;
+  overflow: scroll;
+}

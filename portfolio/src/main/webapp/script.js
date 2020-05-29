@@ -63,15 +63,38 @@ function setUpImagePopups() {
 
 function fetchData() {
     fetch("/data").then(response => response.json()).then(comments => {
-      let commentsContainer = document.getElementById("servlet-response")
+      let commentsContainer = document.getElementById("comments-container")
       for (let comment of comments) {
         let template = document.getElementById("comment-template");
-        let copy = template.content.cloneNode(true);
+        let copy = template.content.cloneNode(true).querySelector(".comment");
 
-        copy.getElementById("display-name").innerText = comment.displayName;
-        copy.getElementById("comment").innerText = comment.comment;
+        copy.querySelector(".display-name").innerText = comment.displayName;
+        let commentElement = copy.querySelector(".comment-content");
+        commentElement.innerText = comment.comment;
 
+        copy.style.visibility = "hidden";
         commentsContainer.appendChild(copy);
+
+        let showMoreButton = copy.querySelector(".show-more");
+
+        if (commentElement.clientHeight === commentElement.scrollHeight) {
+          showMoreButton.style.display = "none";
+        }
+
+        copy.style.visibility = "";
       }
     });
+}
+
+
+function toggleShowMore() {
+  let commentElement = event.srcElement.parentElement.getElementsByClassName("comment-content")[0];
+
+  if (commentElement.style.maxHeight != "none") {
+    commentElement.style.maxHeight = "none";
+    event.srcElement.innerText = "Hide";
+  } else {
+    commentElement.style.maxHeight = null;
+    event.srcElement.innerText = "Show more";
+  }
 }
