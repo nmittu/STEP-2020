@@ -61,9 +61,18 @@ function setUpImagePopups() {
   }
 }
 
+function refreshComments() {
+  let commentsContainer = document.getElementById("comments-container");
+  commentsContainer.querySelectorAll(".comment").forEach(ele => ele.remove());
+
+  fetchData();
+}
+
 function fetchData() {
-    fetch("/data").then(response => response.json()).then(comments => {
-      let commentsContainer = document.getElementById("comments-container")
+    let limit = document.getElementById("limit").value;
+
+    fetch(`/data?limit=${limit}`).then(response => response.json()).then(comments => {
+      let commentsContainer = document.getElementById("comments-container");
       for (let comment of comments) {
         let template = document.getElementById("comment-template");
         let copy = template.content.cloneNode(true).querySelector(".comment");
@@ -97,4 +106,9 @@ function toggleShowMore() {
     commentElement.style.maxHeight = null;
     event.srcElement.innerText = "Show more";
   }
+}
+
+function deleteComments() {
+  let request = new Request("/delete-data", {method: 'POST'});
+  fetch(request).then(resp => resp.text()).then(_ => refreshComments());
 }

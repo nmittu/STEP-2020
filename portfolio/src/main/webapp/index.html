@@ -91,8 +91,8 @@
         <h3>Hobbies</h3>
 
         <p>Outside of coding, I have many hobbies including:</p>
-        <div id="hobbies-container">
-          <ul>
+        <div id="hobbies-container" class="float-container">
+          <ul class="left">
             <li>
               <p>Rock climbing</p>
             </li>
@@ -101,8 +101,8 @@
               <p>Playing trumpet</p>
             </li>
           </ul>
-          <img src="images/image2.jpg" alt="Rock climbing picture" height="200"/>
-          <img src="images/image9.png" alt="Picture of me playing trumpet" height="200"/>
+          <img class="right" src="images/image2.jpg" alt="Rock climbing picture" height="200"/>
+          <img class="right" src="images/image9.png" alt="Picture of me playing trumpet" height="200"/>
         </div>
       </section>
       <section>
@@ -118,10 +118,23 @@
             </template>
           </div>
 
+          <div class="float-container">
+            <button class="left" onclick="deleteComments()">Delete all</button>
+            <div class="right">
+              <label for="limit">Page limit</label>
+              <select id="limit" onchange="refreshComments()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </div>
+
           <form action="/data" method="POST" class="medium-spacing">
-            <input class="medium-spacing" type="text" name="display-name" placeholder="Display Name"/>
+            <input class="medium-spacing fill-width" type="text" name="display-name" placeholder="Display Name"/>
             <br/>
-            <textarea class="medium-spacing" name="comment" placeholder="Comment"></textarea>
+            <textarea class="medium-spacing fill-width" id="comment-textbox" name="comment" placeholder="Comment"></textarea>
             </br/>
             <input class="medium-spacing button" type="submit"/>
           </form>

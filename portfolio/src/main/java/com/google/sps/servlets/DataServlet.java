@@ -37,9 +37,20 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/json;");
 
+    String limitString = request.getParameter("limit");
+    int limit;
+
+    try {
+      limit = Integer.parseInt(limitString);
+    } catch (NumberFormatException e) {
+      // default value
+      limit = 10;
+    }
+
     ArrayList<Comment> comments = new ArrayList<>();
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
@@ -48,6 +59,10 @@ public class DataServlet extends HttpServlet {
       String comment = (String) entity.getProperty("comment");
 
       comments.add(new Comment(displayName, comment));
+
+      if (comments.size() >= limit) {
+        break;
+      }
     }
 
     Gson gson = new Gson();

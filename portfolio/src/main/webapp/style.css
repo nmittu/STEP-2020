@@ -121,16 +121,10 @@ a:hover {
 }
 
 #hobbies-container img {
-  float: right;
   margin: 3px;
 }
 
-#hobbies-container ul {
-    float: left;
-}
-
 #hobbies-container {
-  overflow: auto;
   margin-bottom: 10px;
 }
 
@@ -173,4 +167,24 @@ button, .button {
 button:hover, .button:hover {
   background-color: #F5F5F5;
   color: #001021
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.float-container {
+  overflow: auto;
+}
+
+.fill-width {
+  width: 100%;
+}
+
+#comment-textbox {
+  height: 100px;
 }
