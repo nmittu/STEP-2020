@@ -118,14 +118,17 @@
             </template>
           </div>
 
-          <div class="right">
-            <label for="limit">Page limit</label>
-            <select id="limit" onchange="refreshComments()">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
+          <div>
+            <button class="left" onclick="deleteComments">
+            <div class="right">
+              <label for="limit">Page limit</label>
+              <select id="limit" onchange="refreshComments()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
           </div>
 
           <form action="/data" method="POST" class="medium-spacing">

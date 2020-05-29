@@ -107,3 +107,8 @@ function toggleShowMore() {
     event.srcElement.innerText = "Show more";
   }
 }
+
+function deleteComments() {
+  let request = new Request("/delete-data", {method: 'POST'});
+  fetch(request).then(resp => resp.text()).then(_ => refreshComments);
+}
