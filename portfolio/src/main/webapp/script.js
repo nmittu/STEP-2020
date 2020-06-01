@@ -110,7 +110,7 @@ function fetchData() {
         deleteButton.addEventListener('click', () => {
           deleteComment(comment.id);
 
-          copy.remove();
+          refreshComments();
         })
 
         copy.style.visibility = "";
