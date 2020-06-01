@@ -25,6 +25,31 @@ function createMap() {
   map.addListener('click', (event) => {
     createMarkerEdit(event.latLng.lat(), event.latLng.lng());
   });
+
+  fetchMarkers();
+}
+
+function fetchMarkers() {
+  fetch('/markers').then(resp => resp.json()).then(markers => {
+    markers.forEach(marker => {
+      createMarkerDisplay(marker.lat, marker.lng, marker.desc);
+    });
+  })
+}
+
+function createMarkerDisplay(lat, lng, desc) {
+  const marker = new google.maps.Marker({
+    position: {
+      lat: lat,
+      lng: lng
+    },
+    map: map
+  });
+
+  const infoWindow = new google.maps.InfoWindow({content: desc});
+  marker.addListener('click', () => {
+    infoWindow.open(map, marker);
+  })
 }
 
 function createMarkerEdit(lat, lng) {
@@ -51,12 +76,24 @@ function createMarkerEdit(lat, lng) {
   infoWindow.open(map, marker);
 }
 
+function saveMarker(lat, lng, desc) {
+  const params = new URLSearchParams();
+  params.append("lat", lat);
+  params.append("lng", lng);
+  params.append("desc", desc);
+
+  fetch("/markers", {method: "POST", body: params});
+}
+
 function buildInfoWindow(lat, lng) {
   const textBox = document.createElement('textarea');
   const button = document.createElement('button');
   button.appendChild(document.createTextNode('Submit'));
 
   button.onclick = () => {
+    saveMarker(lat, lng, textBox.value);
+    createMarkerDisplay(lat, lng, textBox.value);
+    
     marker.setMap(null);
   };
 
