@@ -122,7 +122,7 @@
             <button class="left" onclick="deleteComments()">Delete all</button>
             <div class="right">
               <label for="limit">Page limit</label>
-              <select id="limit" onchange="refreshComments()">
+              <select class="select" id="limit" onchange="refreshComments()">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
@@ -132,9 +132,9 @@
           </div>
 
           <form action="/data" method="POST" class="medium-spacing">
-            <input class="medium-spacing fill-width" type="text" name="display-name" placeholder="Display Name"/>
+            <input class="medium-spacing fill-width text-box" type="text" name="display-name" placeholder="Display Name"/>
             <br/>
-            <textarea class="medium-spacing fill-width" id="comment-textbox" name="comment" placeholder="Comment"></textarea>
+            <textarea class="medium-spacing fill-width text-box" id="comment-textbox" name="comment" placeholder="Comment"></textarea>
             </br/>
             <input class="medium-spacing button" type="submit"/>
           </form>
