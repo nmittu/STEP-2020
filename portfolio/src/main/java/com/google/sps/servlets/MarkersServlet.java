@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+@WebServlet("/markers")
 public class DataServlet extends HttpServlet {
 
   @Override
@@ -44,10 +44,11 @@ public class DataServlet extends HttpServlet {
 
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
-      double lat = entity.getProperty("lat");
-      double lng = entity.getProperty("lng");
-
-      markers.add(new Marker(id, lat, lng));
+      double lat = (double) entity.getProperty("lat");
+      double lng = (double) entity.getProperty("lng");
+      String desc = (String) entity.getProperty("desc");
+      
+      markers.add(new Marker(id, lat, lng, desc));
     }
 
     response.setContentType("text/json;");
@@ -60,10 +61,12 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     double lat = Double.parseDouble(getParameter(request, "lat", "0"));
     double lng = Double.parseDouble(getParameter(request, "lng", "0"));
+    String desc = getParameter(request, "desc", "");
 
     Entity entity = new Entity("Marker");
     entity.setProperty("lat", lat);
     entity.setProperty("lng", lng);
+    entity.setProperty("desc", desc);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(entity);

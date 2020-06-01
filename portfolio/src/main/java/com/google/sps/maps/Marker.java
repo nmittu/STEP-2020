@@ -20,11 +20,13 @@ public final class Marker {
   private final long id;
   private final double lat;
   private final double lng;
+  private final String desc;
 
-  public Comment(long id, double lat, double lng) {
+  public Comment(long id, double lat, double lng, String desc) {
     this.id = id;
     this.lat = lat;
     this.lng = lng;
+    this.desc = Objects.requireNonNull(desc);
   }
 
   public long getId() {
