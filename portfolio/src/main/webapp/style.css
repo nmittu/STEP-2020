@@ -151,7 +151,7 @@ a:hover {
 }
 
 #comments-container {
-  max-height: 500px;
+  max-height: 700px;
   overflow: scroll;
 }
 
@@ -211,4 +211,8 @@ button:hover, .button:hover {
   background-color: #35A7FF;
   color: #F5F5F5;
   padding: 5px;
+}
+
+.delete-comment {
+  margin-right: 5px;
 }

@@ -110,9 +110,14 @@
           <div id="comments-container">
             <template id="comment-template">
               <div class="comment">
-                <h4 class="display-name"></h4>
-                <p class="comment-content"></p>
-                <button class="show-more" onclick="toggleShowMore()">Show more</button>
+                <div class="float-container">
+                  <div class="left">
+                    <h4 class="display-name"></h4>
+                    <p class="comment-content"></p>
+                    <button class="show-more" onclick="toggleShowMore()">Show more</button>
+                  </div>
+                  <button class="right delete-comment small-button">&times;</button>
+                </div>
                 <hr/>
               </div>
             </template>

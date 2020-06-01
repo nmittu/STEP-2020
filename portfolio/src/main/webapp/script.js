@@ -106,6 +106,13 @@ function fetchData() {
           showMoreButton.style.display = "none";
         }
 
+        let deleteButton = copy.querySelector(".delete-comment");
+        deleteButton.addEventListener('click', () => {
+          deleteComment(comment.id);
+
+          copy.remove();
+        })
+
         copy.style.visibility = "";
       }
     });
@@ -124,7 +131,7 @@ function toggleShowMore() {
   }
 }
 
-function deleteComments() {
-  let request = new Request("/delete-data", {method: 'POST'});
-  fetch(request).then(resp => resp.text()).then(_ => refreshComments());
+function deleteComment(id) {
+  let request = new Request(`/delete-data?id=${id}`, {method: 'POST'});
+  fetch(request);
 }
