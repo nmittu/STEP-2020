@@ -12,9 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+let map;
+
+let marker;
+
 /** Creates a map and adds it to the page. */
 function createMap() {
-  const map = new google.maps.Map(
+  map = new google.maps.Map(
     document.getElementById('map'),
     {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+
+  map.addListener('click', (event) => {
+    createMarkerEdit(event.latLng.lat(), event.latLng.lng());
+  });
+}
+
+function createMarkerEdit(lat, lng) {
+	if(marker) {
+    marker.setMap(null);
+  }
+
+  marker = new google.maps.Marker({
+    position: {
+      lat:lat,
+      lng,lng
+    },
+    map: map
+  });
+
+  const infoWindow = new google.maps.InfoWindow({
+    content: buildInfoWindow(lat, lng)
+  });
+
+  google.maps.event.addListener(infoWindow, 'closeclick', () => {
+    marker.setMap(null);
+  });
+
+  infoWindow.open(map, marker);
+}
+
+function buildInfoWindow(lat, lng) {
+  const textBox = document.createElement('textarea');
+  const button = document.createElement('button');
+  button.appendChild(document.createTextNode('Submit'));
+
+  button.onclick = () => {
+    marker.setMap(null);
+  };
+
+  const container = document.createElement('div');
+  container.appendChild(textBox);
+  container.appendChild(document.createElement('br'));
+  container.appendChild(button);
+
+  return container;
 }
