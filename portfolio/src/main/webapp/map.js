@@ -20,7 +20,7 @@ let marker;
 function createMap() {
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+    {center: {lat: 41.8317, lng: -95.9914}, zoom: 4});
 
   map.addListener('click', (event) => {
     createMarkerEdit(event.latLng.lat(), event.latLng.lng());
