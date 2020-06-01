@@ -110,24 +110,34 @@
           <div id="comments-container">
             <template id="comment-template">
               <div class="comment">
-                <h4 class="display-name"></h4>
-                <p class="comment-content"></p>
-                <button class="show-more" onclick="toggleShowMore()">Show more</button>
+                <div class="float-container">
+                  <div class="left">
+                    <h4 class="display-name"></h4>
+                    <p class="comment-content"></p>
+                    <button class="show-more" onclick="toggleShowMore()">Show more</button>
+                  </div>
+                  <button class="right delete-comment small-button">&times;</button>
+                </div>
                 <hr/>
               </div>
             </template>
           </div>
 
           <div class="float-container">
-            <button class="left" onclick="deleteComments()">Delete all</button>
             <div class="right">
-              <label for="limit">Page limit</label>
-              <select class="select" id="limit" onchange="refreshComments()">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-              </select>
+              <span>
+                <button class="small-button inline" onclick="prevPage();">&lt;</button>
+                <span id="pageNum">1</span>
+                <button class="small-button inline" onclick="nextPage();">&gt;</button>
+
+                <label for="limit">Page limit</label>
+                <select class="select" id="limit" onchange="refreshComments()">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+              </span>
             </div>
           </div>
 

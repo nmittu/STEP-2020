@@ -17,12 +17,18 @@ package com.google.sps.comments;
 import java.util.Objects;
 
 public final class Comment {
+  private final long id;
   private final String displayName;
   private final String comment;
 
-  public Comment(String displayName, String comment) {
+  public Comment(long id, String displayName, String comment) {
+    this.id = id;
     this.displayName = Objects.requireNonNull(displayName);
     this.comment = Objects.requireNonNull(comment);
+  }
+
+  public long getId() {
+    return id;
   }
 
   public String getDisplayName() {

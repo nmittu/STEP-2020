@@ -61,6 +61,22 @@ function setUpImagePopups() {
   }
 }
 
+
+let page = 1;
+
+function nextPage() {
+  page++;
+  document.getElementById("pageNum").innerText = page;
+  refreshComments();
+}
+
+function prevPage() {
+  page = Math.max(page-1, 1);
+  document.getElementById("pageNum").innerText = page;
+  refreshComments();
+}
+
+
 function refreshComments() {
   let commentsContainer = document.getElementById("comments-container");
   commentsContainer.querySelectorAll(".comment").forEach(ele => ele.remove());
@@ -71,7 +87,7 @@ function refreshComments() {
 function fetchData() {
     let limit = document.getElementById("limit").value;
 
-    fetch(`/data?limit=${limit}`).then(response => response.json()).then(comments => {
+    fetch(`/data?limit=${limit}&page=${page}`).then(response => response.json()).then(comments => {
       let commentsContainer = document.getElementById("comments-container");
       for (let comment of comments) {
         let template = document.getElementById("comment-template");
@@ -89,6 +105,13 @@ function fetchData() {
         if (commentElement.clientHeight === commentElement.scrollHeight) {
           showMoreButton.style.display = "none";
         }
+
+        let deleteButton = copy.querySelector(".delete-comment");
+        deleteButton.addEventListener('click', () => {
+          deleteComment(comment.id);
+
+          refreshComments();
+        })
 
         copy.style.visibility = "";
       }
@@ -108,7 +131,7 @@ function toggleShowMore() {
   }
 }
 
-function deleteComments() {
-  let request = new Request("/delete-data", {method: 'POST'});
-  fetch(request).then(resp => resp.text()).then(_ => refreshComments());
+function deleteComment(id) {
+  let request = new Request(`/delete-data?id=${id}`, {method: 'POST'});
+  fetch(request);
 }
