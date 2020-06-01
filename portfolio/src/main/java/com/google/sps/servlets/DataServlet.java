@@ -69,11 +69,11 @@ public class DataServlet extends HttpServlet {
       if (i <= (page-1)*limit) {
         continue;
       }
-      
+      long id = entity.getKey().getId();
       String displayName = (String) entity.getProperty("displayName");
       String comment = (String) entity.getProperty("comment");
 
-      comments.add(new Comment(displayName, comment));
+      comments.add(new Comment(id, displayName, comment));
 
       if (comments.size() >= limit) {
         break;
