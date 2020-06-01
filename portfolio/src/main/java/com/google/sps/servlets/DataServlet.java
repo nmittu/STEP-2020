@@ -47,6 +47,15 @@ public class DataServlet extends HttpServlet {
       limit = 10;
     }
 
+    String pageString = request.getParameter("page");
+    int page;
+
+    try {
+      page = Integer.parseInt(pageString);
+    } catch (NumberFormatException e) {
+      page = 1;
+    }
+
     ArrayList<Comment> comments = new ArrayList<>();
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -54,7 +63,13 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
+    int i = 0;
     for (Entity entity : results.asIterable()) {
+      i++;
+      if (i <= (page-1)*limit) {
+        continue;
+      }
+      
       String displayName = (String) entity.getProperty("displayName");
       String comment = (String) entity.getProperty("comment");
 

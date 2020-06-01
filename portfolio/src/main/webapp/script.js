@@ -61,6 +61,20 @@ function setUpImagePopups() {
   }
 }
 
+
+let page = 1;
+
+function nextPage() {
+  page++;
+  refreshComments();
+}
+
+function prevPage() {
+  page = Math.max(page-1, 1);
+  refreshComments();
+}
+
+
 function refreshComments() {
   let commentsContainer = document.getElementById("comments-container");
   commentsContainer.querySelectorAll(".comment").forEach(ele => ele.remove());
@@ -71,7 +85,7 @@ function refreshComments() {
 function fetchData() {
     let limit = document.getElementById("limit").value;
 
-    fetch(`/data?limit=${limit}`).then(response => response.json()).then(comments => {
+    fetch(`/data?limit=${limit}&page=${page}`).then(response => response.json()).then(comments => {
       let commentsContainer = document.getElementById("comments-container");
       for (let comment of comments) {
         let template = document.getElementById("comment-template");
