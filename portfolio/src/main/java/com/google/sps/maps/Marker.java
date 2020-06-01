@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.comments;
+package com.google.sps.maps;
 
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public final class Marker {
   private final double lng;
   private final String desc;
 
-  public Comment(long id, double lat, double lng, String desc) {
+  public Marker(long id, double lat, double lng, String desc) {
     this.id = id;
     this.lat = lat;
     this.lng = lng;
