@@ -66,11 +66,13 @@ let page = 1;
 
 function nextPage() {
   page++;
+  document.getElementById("pageNum").innerText = page;
   refreshComments();
 }
 
 function prevPage() {
   page = Math.max(page-1, 1);
+  document.getElementById("pageNum").innerText = page;
   refreshComments();
 }
 
