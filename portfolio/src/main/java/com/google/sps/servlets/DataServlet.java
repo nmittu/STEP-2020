@@ -158,8 +158,6 @@ public class DataServlet extends HttpServlet {
       return null;
     }
 
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-
     BlobKey blobKey = new BlobKey(blobKeyString);
 
     // We could check the validity of the file here, e.g. to make sure it's an image file
