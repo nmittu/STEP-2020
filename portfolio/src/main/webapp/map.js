@@ -14,7 +14,9 @@
 
 let map;
 
-let marker;
+let markerEdit;
+
+let markers = [];
 
 /** Creates a map and adds it to the page. */
 function createMap() {
@@ -32,12 +34,16 @@ function createMap() {
 function fetchMarkers() {
   fetch('/markers').then(resp => resp.json()).then(markers => {
     markers.forEach(marker => {
-      createMarkerDisplay(marker.lat, marker.lng, marker.desc);
+      createMarkerDisplay(marker.lat, marker.lng, marker.desc, marker.id);
     });
   })
 }
 
-function createMarkerDisplay(lat, lng, desc) {
+function deleteMarker(id) {
+  console.log("deleting " + id);
+}
+
+function createMarkerDisplay(lat, lng, desc, id) {
   const marker = new google.maps.Marker({
     position: {
       lat: lat,
@@ -46,18 +52,35 @@ function createMarkerDisplay(lat, lng, desc) {
     map: map
   });
 
-  const infoWindow = new google.maps.InfoWindow({content: desc});
+  descElement = document.createElement("p");
+  descElement.innerText = desc;
+
+  deleteButton = document.createElement("button");
+  deleteButton.innerText = "Delete";
+
+  deleteButton.onclick = () => {
+    marker.setMap(null);
+    
+    deleteMarker(id);
+  }
+
+  container = document.createElement("div");
+  container.appendChild(descElement);
+  container.appendChild(deleteButton);
+
+
+  const infoWindow = new google.maps.InfoWindow({content: container});
   marker.addListener('click', () => {
     infoWindow.open(map, marker);
-  })
+  });
 }
 
 function createMarkerEdit(lat, lng) {
-	if(marker) {
-    marker.setMap(null);
+	if(markerEdit) {
+    markerEdit.setMap(null);
   }
 
-  marker = new google.maps.Marker({
+  markerEdit = new google.maps.Marker({
     position: {
       lat:lat,
       lng,lng
@@ -70,19 +93,21 @@ function createMarkerEdit(lat, lng) {
   });
 
   google.maps.event.addListener(infoWindow, 'closeclick', () => {
-    marker.setMap(null);
+    markerEdit.setMap(null);
   });
 
-  infoWindow.open(map, marker);
+  infoWindow.open(map, markerEdit);
 }
 
-function saveMarker(lat, lng, desc) {
+function saveMarker(lat, lng, desc, onId) {
   const params = new URLSearchParams();
   params.append("lat", lat);
   params.append("lng", lng);
   params.append("desc", desc);
 
-  fetch("/markers", {method: "POST", body: params});
+  fetch("/markers", {method: "POST", body: params}).then(resp => resp.json()).then(marker => {
+    onId(marker.id);
+  });
 }
 
 function buildInfoWindow(lat, lng) {
@@ -91,10 +116,11 @@ function buildInfoWindow(lat, lng) {
   button.appendChild(document.createTextNode('Submit'));
 
   button.onclick = () => {
-    saveMarker(lat, lng, textBox.value);
-    createMarkerDisplay(lat, lng, textBox.value);
+    saveMarker(lat, lng, textBox.value, id => {
+      createMarkerDisplay(lat, lng, textBox.value, id);
     
-    marker.setMap(null);
+    	markerEdit.setMap(null);
+    });
   };
 
   const container = document.createElement('div');
