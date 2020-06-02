@@ -106,6 +106,12 @@ function fetchData() {
         let commentElement = copy.querySelector(".comment-content");
         commentElement.innerText = comment.comment;
 
+        let commentImage = copy.querySelector(".comment-image");
+        if (comment.imageUrl != null) {
+          commentImage.classList.remove("hidden");
+          commentImage.src = comment.imageUrl
+        }
+
         copy.style.visibility = "hidden";
         commentsContainer.appendChild(copy);
 
