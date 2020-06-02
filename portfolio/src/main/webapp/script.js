@@ -32,6 +32,15 @@ function addRandomFact() {
 function onLoad() {
   setUpImagePopups();
   fetchData();
+  fetchImageUrl();
+}
+
+function fetchImageUrl() {
+  fetch('/image-url').then(resp => resp.text()).then(url => {
+    const form = document.getElementById("comments-form");
+    form.action = url;
+    form.classList.remove('hidden');
+  })
 }
 
 
