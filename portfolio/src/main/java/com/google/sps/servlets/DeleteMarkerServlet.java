@@ -40,7 +40,7 @@ public class DeleteMarkerServlet extends HttpServlet {
     
     long id = Long.parseLong(request.getParameter("id"));
 
-    Key commentKey = KeyFactory.createKey("Marker", id);
-    datastore.delete(commentKey);
+    Key markerKey = KeyFactory.createKey("Marker", id);
+    datastore.delete(markerKey);
   }
 }
