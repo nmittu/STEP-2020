@@ -69,7 +69,12 @@ public class MarkersServlet extends HttpServlet {
     entity.setProperty("desc", desc);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(entity);
+    long id = datastore.put(entity).getId();
+
+    response.setContentType("text/json;");
+
+    Gson gson = new Gson();
+    response.getWriter().println(gson.toJson(new Marker(id, lat, lng, desc)));
   }
 
   /**
