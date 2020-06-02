@@ -40,7 +40,10 @@ function fetchMarkers() {
 }
 
 function deleteMarker(id) {
-  console.log("deleting " + id);
+  let params = new URLSearchParams();
+  params.append('id', id);
+  
+  fetch('/delete-marker', {method: 'POST', body: params});
 }
 
 function createMarkerDisplay(lat, lng, desc, id) {
