@@ -16,8 +16,11 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -38,9 +41,18 @@ public class DeleteServlet extends HttpServlet {
     
     long id = Long.parseLong(request.getParameter("id"));
 
-    Key commentKey = KeyFactory.createKey("Comment", id);
-    
     try {
+      Key commentKey = KeyFactory.createKey("Comment", id);
+      Entity entity = datastore.get(commentKey);
+
+      UserService userService = UserServiceFactory.getUserService();
+      boolean isOwner = userService.isUserLoggedIn() &&
+          ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
+
+      if (!isOwner) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Not authorized to delete this comment.");
+      }
+
       String blobKeyString = (String) datastore.get(commentKey).getProperty("imageBlob");
       if (blobKeyString != null) {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
