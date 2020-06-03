@@ -32,14 +32,22 @@ function addRandomFact() {
 function onLoad() {
   setUpImagePopups();
   fetchData();
-  fetchImageUrl();
+  setUpCommentForm();
 }
 
-function fetchImageUrl() {
-  fetch('/image-url').then(resp => resp.text()).then(url => {
-    const form = document.getElementById("comments-form");
-    form.action = url;
-    form.classList.remove('hidden');
+function setUpCommentForm() {
+  fetch('/user-status').then(resp => resp.json()).then(user => {
+    if (user.loggedIn) {
+      document.getElementById("display-name").value = user.displayName;
+
+      fetch('/image-url').then(resp => resp.text()).then(url => {
+        const form = document.getElementById("comments-form");
+        form.action = url;
+        form.classList.remove('hidden');
+      })
+    } else {
+      document.getElementById("login-button").classList.remove("hidden");
+    }
   })
 }
 
