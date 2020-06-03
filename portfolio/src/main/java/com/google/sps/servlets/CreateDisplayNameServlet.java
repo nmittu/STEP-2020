@@ -49,6 +49,9 @@ public class CreateDisplayNameServlet extends HttpServlet {
       entity.setProperty("email", userService.getCurrentUser().getEmail());
       entity.setProperty("displayName", displayName);
 
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(entity);
+
       resp.sendRedirect(returnUrl);
     } else {
       resp.sendRedirect("/login");
