@@ -21,6 +21,10 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gson.Gson;
 import com.google.sps.comments.Comment;
 import java.util.ArrayList;
@@ -41,6 +45,21 @@ public class DeleteServlet extends HttpServlet {
     long id = Long.parseLong(request.getParameter("id"));
 
     Key commentKey = KeyFactory.createKey("Comment", id);
-    datastore.delete(commentKey);
+    
+    try {
+      String blobKeyString = (String) datastore.get(commentKey).getProperty("imageBlob");
+      if (blobKeyString != null) {
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        BlobKey blobKey = new BlobKey(blobKeyString);
+
+        blobstoreService.delete(blobKey);
+        System.out.println("Deleted");
+      }
+
+
+      datastore.delete(commentKey);
+    } catch (EntityNotFoundException e) {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND, "Key does not exist");
+    }
   }
 }

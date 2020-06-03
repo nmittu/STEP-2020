@@ -20,11 +20,13 @@ public final class Comment {
   private final long id;
   private final String displayName;
   private final String comment;
+  private final String imageUrl;
 
-  public Comment(long id, String displayName, String comment) {
+  public Comment(long id, String displayName, String comment, String imageUrl) {
     this.id = id;
     this.displayName = Objects.requireNonNull(displayName);
     this.comment = Objects.requireNonNull(comment);
+    this.imageUrl = imageUrl;
   }
 
   public long getId() {
@@ -37,5 +39,9 @@ public final class Comment {
 
   public String getComment() {
     return comment;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
   }
 }

@@ -216,3 +216,7 @@ button:hover, .button:hover {
 .delete-comment {
   margin-right: 5px;
 }
+
+.hidden {
+  display: none;
+}

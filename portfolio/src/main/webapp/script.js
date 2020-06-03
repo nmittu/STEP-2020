@@ -32,6 +32,15 @@ function addRandomFact() {
 function onLoad() {
   setUpImagePopups();
   fetchData();
+  fetchImageUrl();
+}
+
+function fetchImageUrl() {
+  fetch('/image-url').then(resp => resp.text()).then(url => {
+    const form = document.getElementById("comments-form");
+    form.action = url;
+    form.classList.remove('hidden');
+  })
 }
 
 
@@ -96,6 +105,12 @@ function fetchData() {
         copy.querySelector(".display-name").innerText = comment.displayName;
         let commentElement = copy.querySelector(".comment-content");
         commentElement.innerText = comment.comment;
+
+        let commentImage = copy.querySelector(".comment-image");
+        if (comment.imageUrl != null) {
+          commentImage.classList.remove("hidden");
+          commentImage.src = comment.imageUrl
+        }
 
         copy.style.visibility = "hidden";
         commentsContainer.appendChild(copy);
