@@ -8,8 +8,7 @@
 
     <script>
       function onLoad() {
-        document.getElementById("display-name-form").action = 
-          "/create-display-name?return=" + getUrlParam("return");
+        document.getElementById("returnParam").value = getUrlParam("return");
       }
 
       function getUrlParam(param) {
@@ -25,12 +24,13 @@
         <h1>Create Display Name</h1>
       </div>
     </header>
-      
-    <form id="display-name-form" action="/create-display-name" method="POST" enctype="multipart/form-data">
-      <input class="medium-spacing fill-width text-box" type="text" name="display-name" placeholder="Display Name"/>
-      <br/>
-      <input class="medium-spacing button" type="submit"/>
-    </form>
-    
+    <div id="content">
+      <form id="display-name-form" action="/create-display-name" method="POST">
+        <input class="medium-spacing fill-width text-box" type="text" name="display-name" placeholder="Display Name"/>
+        <input type="hidden" id="returnParam" name="return"/>
+        <br/>
+        <input class="medium-spacing button" type="submit"/>
+      </form>
+    </div>
   </body>
 </html>
