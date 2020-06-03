@@ -28,6 +28,8 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.comments.Comment;
 import java.util.ArrayList;
@@ -87,7 +89,11 @@ public class DataServlet extends HttpServlet {
       String blobKey = (String) entity.getProperty("imageBlob");
       String imageUrl = getImageUrl(blobKey);
 
-      comments.add(new Comment(id, displayName, comment, imageUrl));
+      UserService userService = UserServiceFactory.getUserService();
+      boolean isOwner = userService.isUserLoggedIn() &&
+        ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
+      
+      comments.add(new Comment(id, displayName, comment, imageUrl, isOwner));
 
       if (comments.size() >= limit) {
         break;
@@ -105,11 +111,17 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
     String imageBlob = getBlobKey(request, "image");
 
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/login");
+    }
+
     Entity entity = new Entity("Comment");
     entity.setProperty("displayName", displayName);
     entity.setProperty("comment", comment);
     entity.setProperty("timestamp", timestamp);
     entity.setProperty("imageBlob", imageBlob);
+    entity.setProperty("userId", userService.getCurrentUser().getUserId());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(entity);

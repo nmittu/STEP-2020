@@ -21,12 +21,14 @@ public final class Comment {
   private final String displayName;
   private final String comment;
   private final String imageUrl;
+  private final boolean isOwner;
 
-  public Comment(long id, String displayName, String comment, String imageUrl) {
+  public Comment(long id, String displayName, String comment, String imageUrl, boolean isOwner) {
     this.id = id;
     this.displayName = Objects.requireNonNull(displayName);
     this.comment = Objects.requireNonNull(comment);
     this.imageUrl = imageUrl;
+    this.isOwner = isOwner;
   }
 
   public long getId() {
@@ -43,5 +45,9 @@ public final class Comment {
 
   public String getImageUrl() {
     return imageUrl;
+  }
+
+  public boolean getIsOwner() {
+    return isOwner;
   }
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nick's Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+      function onLoad() {
+        document.getElementById("returnParam").value = getUrlParam("return");
+      }
+
+      function getUrlParam(param) {
+        const queryStr = window.location.search;
+        const urlParam = new URLSearchParams(queryStr);
+        return urlParam.get(param);
+      }
+    </script>
+  </head>
+  <body onload="onLoad();">
+    <header>  
+      <div id="header-content" class="center-v">
+        <h1>Create Display Name</h1>
+      </div>
+    </header>
+    <div id="content">
+      <form id="display-name-form" action="/create-display-name" method="POST">
+        <input class="medium-spacing fill-width text-box" type="text" name="display-name" placeholder="Display Name"/>
+        <input type="hidden" id="returnParam" name="return"/>
+        <br/>
+        <input class="medium-spacing button" type="submit"/>
+      </form>
+    </div>
+  </body>
+</html>
