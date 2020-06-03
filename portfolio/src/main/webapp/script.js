@@ -46,7 +46,9 @@ function setUpCommentForm() {
         form.classList.remove('hidden');
       })
     } else {
-      document.getElementById("login-button").classList.remove("hidden");
+      const loginOut = document.getElementById("login-out");
+      loginOut.href = "/login"
+      loginOut.innerText = "Login";
     }
   })
 }
