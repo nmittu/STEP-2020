@@ -132,11 +132,15 @@ function fetchData() {
         }
 
         let deleteButton = copy.querySelector(".delete-comment");
-        deleteButton.addEventListener('click', () => {
-          deleteComment(comment.id);
+        if (comment.isOwner){
+          deleteButton.addEventListener('click', () => {
+            deleteComment(comment.id);
 
-          refreshComments();
-        })
+            refreshComments();
+          });
+        } else {
+          deleteButton.remove();
+        }
 
         copy.style.visibility = "";
       }
