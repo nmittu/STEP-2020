@@ -21,12 +21,14 @@ public final class Marker {
   private final double lat;
   private final double lng;
   private final String desc;
+  private final boolean isOwner;
 
-  public Marker(long id, double lat, double lng, String desc) {
+  public Marker(long id, double lat, double lng, String desc, boolean isOwner) {
     this.id = id;
     this.lat = lat;
     this.lng = lng;
     this.desc = Objects.requireNonNull(desc);
+    this.isOwner = isOwner;
   }
 
   public long getId() {
@@ -39,5 +41,13 @@ public final class Marker {
 
   public double getLng() {
     return lng;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public boolean getIsOwner() {
+    return isOwner;
   }
 }

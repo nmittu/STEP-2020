@@ -6,7 +6,6 @@
     <title>Map</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="map.css">
-    <script src="script.js"></script>
     <script src="map.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1SZvK0oy-a_pJgEBUw_ZRIYXESGof4m0"></script>
   </head>
@@ -26,11 +25,29 @@
     </nav>
     <div id="content">
       <p>Click on the map to add markers!</p>
-    	<div id="map"></div>
+      <div id="map"></div>
+      
+      <a href="/logout" id="login-out" class="medium-spacing small-button">Logout</a>
     </div>
     <div class="image-popup-container">
       <span class="close">&times;</span>
       <img class="image-popup"/>
     </div>
+
+    <!-- Map Templates -->
+    <template id="edit-marker-template">
+      <div class="edit-marker">
+        <textarea class="marker-desc-box not-resizable"></textarea>
+        <br/>
+        <button class="submit-marker small-button">Submit</button>
+      </div>
+    </template>
+
+    <template id="display-marker-template">
+      <div class="display-marker">
+        <p class="marker-description"></p>
+        <button class="hidden delete-marker">Delete</button>
+      </div>
+    </template>
   </body>
 </html>

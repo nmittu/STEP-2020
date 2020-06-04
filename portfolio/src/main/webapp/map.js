@@ -23,9 +23,17 @@ function createMap() {
   map = new google.maps.Map(
     document.getElementById('map'),
     {center: {lat: 41.8317, lng: -95.9914}, zoom: 4});
-
-  map.addListener('click', (event) => {
-    createMarkerEdit(event.latLng.lat(), event.latLng.lng());
+  
+  fetch('/user-status').then(resp => resp.json()).then(user => {
+    if (user.loggedIn) {
+      map.addListener('click', (event) => {
+        createMarkerEdit(event.latLng.lat(), event.latLng.lng());
+      });
+    } else {
+      const loginOut = document.getElementById("login-out");
+      loginOut.href = "/login"
+      loginOut.innerText = "Login";
+    }
   });
 
   fetchMarkers();
@@ -34,7 +42,7 @@ function createMap() {
 function fetchMarkers() {
   fetch('/markers').then(resp => resp.json()).then(markers => {
     markers.forEach(marker => {
-      createMarkerDisplay(marker.lat, marker.lng, marker.desc, marker.id);
+      createMarkerDisplay(marker.lat, marker.lng, marker.desc, marker.id, marker.isOwner);
     });
   })
 }
@@ -46,7 +54,7 @@ function deleteMarker(id) {
   fetch('/delete-marker', {method: 'POST', body: params});
 }
 
-function createMarkerDisplay(lat, lng, desc, id) {
+function createMarkerDisplay(lat, lng, desc, id, isOwner) {
   const marker = new google.maps.Marker({
     position: {
       lat: lat,
@@ -55,24 +63,26 @@ function createMarkerDisplay(lat, lng, desc, id) {
     map: map
   });
 
-  descElement = document.createElement("p");
+  const template = document.getElementById("display-marker-template");
+  const copy = template.content.cloneNode(true).querySelector(".display-marker");
+
+  const descElement = copy.querySelector(".marker-description");
   descElement.innerText = desc;
 
-  deleteButton = document.createElement("button");
-  deleteButton.innerText = "Delete";
+  if (isOwner) {
+    const deleteButton = copy.querySelector('.delete-marker');
+    deleteButton.classList.remove("hidden");
+  
 
-  deleteButton.onclick = () => {
-    marker.setMap(null);
-    
-    deleteMarker(id);
+    deleteButton.onclick = () => {
+      marker.setMap(null);
+      
+      deleteMarker(id);
+    }
   }
 
-  container = document.createElement("div");
-  container.appendChild(descElement);
-  container.appendChild(deleteButton);
 
-
-  const infoWindow = new google.maps.InfoWindow({content: container});
+  const infoWindow = new google.maps.InfoWindow({content: copy});
   marker.addListener('click', () => {
     infoWindow.open(map, marker);
   });
@@ -114,22 +124,19 @@ function saveMarker(lat, lng, desc, onId) {
 }
 
 function buildInfoWindow(lat, lng) {
-  const textBox = document.createElement('textarea');
-  const button = document.createElement('button');
-  button.appendChild(document.createTextNode('Submit'));
+  const template = document.getElementById("edit-marker-template");
+  const copy = template.content.cloneNode(true).querySelector(".edit-marker");
+
+  const button = copy.querySelector(".submit-marker");
+  const textBox = copy.querySelector(".marker-desc-box")
 
   button.onclick = () => {
     saveMarker(lat, lng, textBox.value, id => {
-      createMarkerDisplay(lat, lng, textBox.value, id);
+      createMarkerDisplay(lat, lng, textBox.value, id, true);
     
     	markerEdit.setMap(null);
     });
   };
 
-  const container = document.createElement('div');
-  container.appendChild(textBox);
-  container.appendChild(document.createElement('br'));
-  container.appendChild(button);
-
-  return container;
+  return copy;
 }
