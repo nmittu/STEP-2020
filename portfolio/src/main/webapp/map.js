@@ -63,12 +63,15 @@ function createMarkerDisplay(lat, lng, desc, id, isOwner) {
     map: map
   });
 
-  descElement = document.createElement("p");
+  const template = document.getElementById("display-marker-template");
+  const copy = template.content.cloneNode(true).querySelector(".display-marker");
+
+  const descElement = copy.querySelector(".marker-description");
   descElement.innerText = desc;
 
   if (isOwner) {
-    deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete";
+    const deleteButton = copy.querySelector('.delete-marker');
+    deleteButton.classList.remove("hidden");
   
 
     deleteButton.onclick = () => {
@@ -78,14 +81,8 @@ function createMarkerDisplay(lat, lng, desc, id, isOwner) {
     }
   }
 
-  container = document.createElement("div");
-  container.appendChild(descElement);
-  if (isOwner) {
-    container.appendChild(deleteButton);
-  }
 
-
-  const infoWindow = new google.maps.InfoWindow({content: container});
+  const infoWindow = new google.maps.InfoWindow({content: copy});
   marker.addListener('click', () => {
     infoWindow.open(map, marker);
   });
@@ -127,9 +124,11 @@ function saveMarker(lat, lng, desc, onId) {
 }
 
 function buildInfoWindow(lat, lng) {
-  const textBox = document.createElement('textarea');
-  const button = document.createElement('button');
-  button.appendChild(document.createTextNode('Submit'));
+  const template = document.getElementById("edit-marker-template");
+  const copy = template.content.cloneNode(true).querySelector(".edit-marker");
+
+  const button = copy.querySelector(".submit-marker");
+  const textBox = copy.querySelector(".marker-desc-box")
 
   button.onclick = () => {
     saveMarker(lat, lng, textBox.value, id => {
@@ -139,10 +138,5 @@ function buildInfoWindow(lat, lng) {
     });
   };
 
-  const container = document.createElement('div');
-  container.appendChild(textBox);
-  container.appendChild(document.createElement('br'));
-  container.appendChild(button);
-
-  return container;
+  return copy;
 }
