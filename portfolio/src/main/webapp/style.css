@@ -202,6 +202,9 @@ button:hover, .button:hover, .small-button:hover {
 
 #comment-textbox {
   height: 100px;
+}
+
+.not-resizable {
   resize: none;
 }
 
