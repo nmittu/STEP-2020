@@ -19,6 +19,8 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.maps.Marker;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ public class MarkersServlet extends HttpServlet {
     ArrayList<Marker> markers = new ArrayList<>();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    UserService userService = UserServiceFactory.getUserService();
 
     Query query = new Query("Marker");
     PreparedQuery results = datastore.prepare(query);
@@ -46,8 +49,10 @@ public class MarkersServlet extends HttpServlet {
       double lat = (double) entity.getProperty("lat");
       double lng = (double) entity.getProperty("lng");
       String desc = (String) entity.getProperty("desc");
+      boolean isOwner = userService.isUserLoggedIn() &&
+        ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
       
-      markers.add(new Marker(id, lat, lng, desc));
+      markers.add(new Marker(id, lat, lng, desc, isOwner));
     }
 
     response.setContentType("text/json;");
@@ -58,22 +63,29 @@ public class MarkersServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    double lat = Double.parseDouble(getParameter(request, "lat", "0"));
-    double lng = Double.parseDouble(getParameter(request, "lng", "0"));
-    String desc = getParameter(request, "desc", "");
+    UserService userService = UserServiceFactory.getUserService();
 
-    Entity entity = new Entity("Marker");
-    entity.setProperty("lat", lat);
-    entity.setProperty("lng", lng);
-    entity.setProperty("desc", desc);
+    if (userService.isUserLoggedIn()) {
+      double lat = Double.parseDouble(getParameter(request, "lat", "0"));
+      double lng = Double.parseDouble(getParameter(request, "lng", "0"));
+      String desc = getParameter(request, "desc", "");
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    long id = datastore.put(entity).getId();
+      Entity entity = new Entity("Marker");
+      entity.setProperty("lat", lat);
+      entity.setProperty("lng", lng);
+      entity.setProperty("desc", desc);
+      entity.setProperty("userId", userService.getCurrentUser().getUserId());
 
-    response.setContentType("text/json;");
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      long id = datastore.put(entity).getId();
 
-    Gson gson = new Gson();
-    response.getWriter().println(gson.toJson(new Marker(id, lat, lng, desc)));
+      response.setContentType("text/json;");
+
+      Gson gson = new Gson();
+      response.getWriter().println(gson.toJson(new Marker(id, lat, lng, desc, true)));
+    } else {
+      response.sendRedirect("/login");
+    }
   }
 
   /**
