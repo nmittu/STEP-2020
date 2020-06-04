@@ -42,7 +42,7 @@ function createMap() {
 function fetchMarkers() {
   fetch('/markers').then(resp => resp.json()).then(markers => {
     markers.forEach(marker => {
-      createMarkerDisplay(marker.lat, marker.lng, marker.desc, marker.id);
+      createMarkerDisplay(marker.lat, marker.lng, marker.desc, marker.id, marker.isOwner);
     });
   })
 }
@@ -54,7 +54,7 @@ function deleteMarker(id) {
   fetch('/delete-marker', {method: 'POST', body: params});
 }
 
-function createMarkerDisplay(lat, lng, desc, id) {
+function createMarkerDisplay(lat, lng, desc, id, isOwner) {
   const marker = new google.maps.Marker({
     position: {
       lat: lat,
@@ -66,18 +66,23 @@ function createMarkerDisplay(lat, lng, desc, id) {
   descElement = document.createElement("p");
   descElement.innerText = desc;
 
-  deleteButton = document.createElement("button");
-  deleteButton.innerText = "Delete";
+  if (isOwner) {
+    deleteButton = document.createElement("button");
+    deleteButton.innerText = "Delete";
+  
 
-  deleteButton.onclick = () => {
-    marker.setMap(null);
-    
-    deleteMarker(id);
+    deleteButton.onclick = () => {
+      marker.setMap(null);
+      
+      deleteMarker(id);
+    }
   }
 
   container = document.createElement("div");
   container.appendChild(descElement);
-  container.appendChild(deleteButton);
+  if (isOwner) {
+    container.appendChild(deleteButton);
+  }
 
 
   const infoWindow = new google.maps.InfoWindow({content: container});
@@ -128,7 +133,7 @@ function buildInfoWindow(lat, lng) {
 
   button.onclick = () => {
     saveMarker(lat, lng, textBox.value, id => {
-      createMarkerDisplay(lat, lng, textBox.value, id);
+      createMarkerDisplay(lat, lng, textBox.value, id, true);
     
     	markerEdit.setMap(null);
     });
