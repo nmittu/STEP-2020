@@ -23,9 +23,17 @@ function createMap() {
   map = new google.maps.Map(
     document.getElementById('map'),
     {center: {lat: 41.8317, lng: -95.9914}, zoom: 4});
-
-  map.addListener('click', (event) => {
-    createMarkerEdit(event.latLng.lat(), event.latLng.lng());
+  
+  fetch('/user-status').then(resp => resp.json()).then(user => {
+    if (user.loggedIn) {
+      map.addListener('click', (event) => {
+        createMarkerEdit(event.latLng.lat(), event.latLng.lng());
+      });
+    } else {
+      const loginOut = document.getElementById("login-out");
+      loginOut.href = "/login"
+      loginOut.innerText = "Login";
+    }
   });
 
   fetchMarkers();
