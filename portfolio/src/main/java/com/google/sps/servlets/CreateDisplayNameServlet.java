@@ -32,6 +32,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
+import static com.google.sps.servlets.RequestHelper.getParameter;
+
+
 @WebServlet("/create-display-name")
 public class CreateDisplayNameServlet extends HttpServlet {
   @Override
@@ -70,18 +73,6 @@ public class CreateDisplayNameServlet extends HttpServlet {
     } else {
       resp.sendRedirect("/login");
     }
-  }
-
-  /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
   }
 
   public String getDisplayName(String email) {
