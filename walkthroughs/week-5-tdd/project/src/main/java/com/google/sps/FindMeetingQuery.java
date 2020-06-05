@@ -36,8 +36,6 @@ public final class FindMeetingQuery {
       }
     }
 
-    //System.out.println(relevantEvents.size());
-
     List<TimeRange> freeTime = getFreeTimes(relevantEventsWithOpt);
     freeTime.removeIf(new NotEnoughTime(request.getDuration()));
 
