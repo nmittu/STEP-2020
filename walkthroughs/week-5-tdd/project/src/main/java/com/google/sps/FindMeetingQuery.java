@@ -25,23 +25,29 @@ import java.util.function.Predicate;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    List<Event> relevantEvents = new LinkedList<>(events);
-    relevantEvents.removeIf(new Predicate<Event>() {
-      @Override
-      public boolean test(Event t) {
-        Set<String> attendeesCopy = new HashSet<>(t.getAttendees());
-        attendeesCopy.retainAll(request.getAttendees());
-        return attendeesCopy.isEmpty();
-      }
-    });
+    List<Event> relevantEvents = new LinkedList<>();
+    List<Event> relevantEventsWithOpt = new LinkedList<>();
 
-    List<TimeRange> freeTime = getFreeTimes(relevantEvents);
-    freeTime.removeIf(new Predicate<TimeRange>() {
-      @Override
-      public boolean test(TimeRange t) {
-        return t.duration() < request.getDuration();
+    for (Event event : events) {
+      if (!Collections.disjoint(event.getAttendees(), request.getAttendees())) {
+        relevantEvents.add(event);
+        relevantEventsWithOpt.add(event);
+        
+      } else if (!Collections.disjoint(event.getAttendees(), request.getOptionalAttendees())) {
+        relevantEventsWithOpt.add(event);
       }
-    });
+    }
+
+    //System.out.println(relevantEvents.size());
+
+    List<TimeRange> freeTime = getFreeTimes(relevantEventsWithOpt);
+    freeTime.removeIf(new NotEnoughTime(request.getDuration()));
+
+    // If there are no times check only mandatory attendees.
+    if (freeTime.isEmpty() && !request.getAttendees().isEmpty()) {
+      freeTime = getFreeTimes(relevantEvents);
+      freeTime.removeIf(new NotEnoughTime(request.getDuration()));
+    }
 
     return freeTime;
   }
@@ -64,8 +70,9 @@ public final class FindMeetingQuery {
       end = events.get(i).getWhen().start();
       freeTimes.add(TimeRange.fromStartEnd(start, end, false));
 
+      // Check for events that overlap with this event.
       start = events.get(i).getWhen().end();
-      while(i < events.size()-1 && events.get(i).getWhen().overlaps(events.get(i+1).getWhen())) {
+      while(i < events.size()-1 && events.get(i+1).getWhen().start() < start) {
         i++;
         start = Math.max(start, events.get(i).getWhen().end());
       }
@@ -76,5 +83,17 @@ public final class FindMeetingQuery {
     freeTimes.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
 
     return freeTimes;
+  }
+
+  static class NotEnoughTime implements Predicate<TimeRange> {
+    private final long time;
+    public NotEnoughTime(long time) {
+      this.time = time;
+    }
+
+    @Override
+    public boolean test(TimeRange t) {
+      return t.duration() < time;
+    }
   }
 }
