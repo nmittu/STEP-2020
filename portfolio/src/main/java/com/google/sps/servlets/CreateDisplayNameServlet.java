@@ -84,12 +84,10 @@ public class CreateDisplayNameServlet extends HttpServlet {
       Query.FilterOperator.EQUAL, 
       email));
 
-    PreparedQuery results = datastore.prepare(query);
+    Entity result = datastore.prepare(query).asSingleEntity();
 
-    Iterator<Entity> entities = results.asIterable().iterator();
-
-    if (entities.hasNext()) {
-      return (String) entities.next().getProperty("displayName");
+    if (result != null) {
+      return (String) result.getProperty("displayName");
     } else {
       return null;
     }
