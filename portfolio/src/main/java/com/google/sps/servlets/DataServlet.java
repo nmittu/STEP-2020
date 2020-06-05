@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -42,6 +43,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.google.sps.servlets.RequestHelper.getParameter;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
@@ -77,12 +80,7 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
-    int i = 0;
-    for (Entity entity : results.asIterable()) {
-      i++;
-      if (i <= (page-1)*limit) {
-        continue;
-      }
+    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(limit).offset((page - 1)*limit))) {
       long id = entity.getKey().getId();
       String displayName = (String) entity.getProperty("displayName");
       String comment = (String) entity.getProperty("comment");
@@ -94,10 +92,6 @@ public class DataServlet extends HttpServlet {
         ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
       
       comments.add(new Comment(id, displayName, comment, imageUrl, isOwner));
-
-      if (comments.size() >= limit) {
-        break;
-      }
     }
 
     Gson gson = new Gson();
@@ -127,18 +121,6 @@ public class DataServlet extends HttpServlet {
     datastore.put(entity);
     
     response.sendRedirect("/index.html");
-  }
-
-  /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
   }
 
   /** Returns a URL that points to the uploaded file, or null if the user didn't upload a file. */
