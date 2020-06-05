@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -79,12 +80,7 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
-    int i = 0;
-    for (Entity entity : results.asIterable()) {
-      i++;
-      if (i <= (page-1)*limit) {
-        continue;
-      }
+    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(limit).offset((page - 1)*limit))) {
       long id = entity.getKey().getId();
       String displayName = (String) entity.getProperty("displayName");
       String comment = (String) entity.getProperty("comment");
@@ -96,10 +92,6 @@ public class DataServlet extends HttpServlet {
         ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
       
       comments.add(new Comment(id, displayName, comment, imageUrl, isOwner));
-
-      if (comments.size() >= limit) {
-        break;
-      }
     }
 
     Gson gson = new Gson();
