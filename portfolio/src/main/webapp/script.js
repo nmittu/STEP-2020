@@ -118,6 +118,11 @@ function fetchData() {
           let commentElement = copy.querySelector(".comment-content");
           commentElement.innerText = comment.comment;
 
+          if (comment.sentiment) {
+            let sentimentElement = copy.querySelector('.sentiment');
+            sentimentElement.innerText = getSentimentEmoji(comment.sentiment);
+          }
+
           let commentImage = copy.querySelector(".comment-image");
           if (comment.imageUrl != null) {
             commentImage.classList.remove("hidden");
@@ -147,6 +152,20 @@ function fetchData() {
           copy.style.visibility = "";
         }
       });
+}
+
+function getSentimentEmoji(score) {
+  if (score >= 0.9) {
+    return String.fromCodePoint(0x1F601);
+  } else if (score >= 0.8) {
+    return String.fromCodePoint(0x1F600);
+  } else if (score >= 0.6) {
+    return String.fromCodePoint(0x1F610);
+  } else if (score >= 0.4) {
+    return String.fromCodePoint(0x1F611);
+  } else if (score >=0.2) {
+    return String.fromCodePoint(0x1F620);
+  }
 }
 
 
