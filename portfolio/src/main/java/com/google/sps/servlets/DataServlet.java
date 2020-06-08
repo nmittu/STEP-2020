@@ -31,6 +31,9 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.comments.Comment;
 import java.util.ArrayList;
@@ -73,6 +76,10 @@ public class DataServlet extends HttpServlet {
       page = 1;
     }
 
+    String targetLang = getParameter(request, "targetLang", "en");
+
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+
     ArrayList<Comment> comments = new ArrayList<>();
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -91,7 +98,9 @@ public class DataServlet extends HttpServlet {
       boolean isOwner = userService.isUserLoggedIn() &&
         ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
       
-      comments.add(new Comment(id, displayName, comment, imageUrl, isOwner));
+      Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(targetLang));
+
+      comments.add(new Comment(id, displayName, translation.getTranslatedText(), imageUrl, isOwner));
     }
 
     Gson gson = new Gson();
