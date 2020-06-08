@@ -31,6 +31,9 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
@@ -87,20 +90,25 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
-    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(limit).offset((page - 1)*limit))) {
-      long id = entity.getKey().getId();
-      String displayName = (String) entity.getProperty("displayName");
-      String comment = (String) entity.getProperty("comment");
-      String blobKey = (String) entity.getProperty("imageBlob");
-      String imageUrl = getImageUrl(blobKey);
+    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
+      for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(limit).offset((page - 1)*limit))) {
+        long id = entity.getKey().getId();
+        String displayName = (String) entity.getProperty("displayName");
+        String comment = (String) entity.getProperty("comment");
+        String blobKey = (String) entity.getProperty("imageBlob");
+        String imageUrl = getImageUrl(blobKey);
 
-      UserService userService = UserServiceFactory.getUserService();
-      boolean isOwner = userService.isUserLoggedIn() &&
-        ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
-      
-      Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(targetLang));
+        UserService userService = UserServiceFactory.getUserService();
+        boolean isOwner = userService.isUserLoggedIn() &&
+          ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
+        
+        Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(targetLang));
 
-      comments.add(new Comment(id, displayName, translation.getTranslatedText(), imageUrl, isOwner));
+        Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+        Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+
+        comments.add(new Comment(id, displayName, translation.getTranslatedText(), imageUrl, isOwner, sentiment.getScore()));
+      }
     }
 
     Gson gson = new Gson();
