@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
@@ -39,6 +40,9 @@ public class TemperatureDataServlet extends HttpServlet {
       "/WEB-INF/temperature_data.csv"
     ));
 
+    int lastYear = Integer.MIN_VALUE;
+    double maxT = Double.MIN_VALUE;
+
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
       if (Character.isDigit(line.charAt(0))) {
@@ -47,16 +51,24 @@ public class TemperatureDataServlet extends HttpServlet {
 
           if (cells.length >= 2) {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(cells[0]);
-            
+            int year = date.toInstant().atZone(ZoneId.systemDefault()).getYear();
+
             Double temp = Double.parseDouble(cells[1]);
 
             Double max = null;
 
             if (cells.length >= 4) {
-              max = Double.parseDouble(cells[3]);
+              if (lastYear == year) {
+                maxT = Math.max(maxT, Double.parseDouble(cells[3]));
+              } else {
+                max = maxT;
+                maxT = Double.MIN_VALUE;
+              }
             }
 
             temperatureData.put(date, new TempData(temp, max));
+
+            lastYear = year;
           }
         } catch (ParseException e) {
           continue;
