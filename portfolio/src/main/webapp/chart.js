@@ -19,10 +19,11 @@ function drawChart() {
   fetch('/temperature-data').then(resp => resp.json()).then(tempData => {
     const data = new google.visualization.DataTable();
     data.addColumn('date', 'Date');
-    data.addColumn('number', 'Temperature');
+    data.addColumn('number', 'Avg. Temperature');
+    data.addColumn('number', 'Max. Temperature')
 
     Object.keys(tempData).forEach(date => {
-      data.addRow([new Date(Date.parse(date)), tempData[date]]);
+      data.addRow([new Date(Date.parse(date)), tempData[date].avg, tempData[date].max]);
     });
 
     const options = {

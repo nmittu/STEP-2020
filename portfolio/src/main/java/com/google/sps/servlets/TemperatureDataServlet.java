@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/temperature-data")
 public class TemperatureDataServlet extends HttpServlet {
-	private final LinkedHashMap<Date, Double> temperatureData = new LinkedHashMap<>();
+	private final LinkedHashMap<Date, TempData> temperatureData = new LinkedHashMap<>();
 
   @Override
   public void init() {
@@ -47,9 +47,16 @@ public class TemperatureDataServlet extends HttpServlet {
 
           if (cells.length >= 2) {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(cells[0]);
-            Double temp = Double .parseDouble(cells[1]);
+            
+            Double temp = Double.parseDouble(cells[1]);
 
-            temperatureData.put(date, temp);
+            Double max = null;
+
+            if (cells.length >= 4) {
+              max = Double.parseDouble(cells[3]);
+            }
+
+            temperatureData.put(date, new TempData(temp, max));
           }
         } catch (ParseException e) {
           continue;
@@ -65,5 +72,15 @@ public class TemperatureDataServlet extends HttpServlet {
     resp.setContentType("application/json");
     Gson gson = new Gson();
     resp.getWriter().println(gson.toJson(temperatureData));
+  }
+
+  static class TempData {
+    public Double avg;
+    public Double max;
+
+    public TempData(Double avg, Double max) {
+      this.avg = avg;
+      this.max = max;
+    }
   }
 }
