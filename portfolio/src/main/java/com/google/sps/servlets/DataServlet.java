@@ -90,26 +90,24 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
-    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
-      for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(limit).offset((page - 1)*limit))) {
-        long id = entity.getKey().getId();
-        String displayName = (String) entity.getProperty("displayName");
-        String comment = (String) entity.getProperty("comment");
-        String blobKey = (String) entity.getProperty("imageBlob");
-        String imageUrl = getImageUrl(blobKey);
+    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(limit).offset((page - 1)*limit))) {
+      long id = entity.getKey().getId();
+      String displayName = (String) entity.getProperty("displayName");
+      String comment = (String) entity.getProperty("comment");
+      String blobKey = (String) entity.getProperty("imageBlob");
+      String imageUrl = getImageUrl(blobKey);
+      Double sentiment = (Double) entity.getProperty("sentiment");
 
-        UserService userService = UserServiceFactory.getUserService();
-        boolean isOwner = userService.isUserLoggedIn() &&
-          ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
-        
-        Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(targetLang));
+      UserService userService = UserServiceFactory.getUserService();
+      boolean isOwner = userService.isUserLoggedIn() &&
+        ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
+      
+      Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(targetLang));
 
-        Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
-        Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
 
-        comments.add(new Comment(id, displayName, translation.getTranslatedText(), imageUrl, isOwner, sentiment.getScore()));
-      }
+      comments.add(new Comment(id, displayName, translation.getTranslatedText(), imageUrl, isOwner, sentiment.floatValue()));
     }
+    
 
     Gson gson = new Gson();
     response.getWriter().println(gson.toJson(comments));
@@ -121,6 +119,14 @@ public class DataServlet extends HttpServlet {
     String comment = getParameter(request, "comment", "");
     long timestamp = System.currentTimeMillis();
     String imageBlob = getBlobKey(request, "image");
+    float sentimentScore;
+
+    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
+      Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+
+      sentimentScore = sentiment.getScore();
+    }
 
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
@@ -132,6 +138,7 @@ public class DataServlet extends HttpServlet {
     entity.setProperty("comment", comment);
     entity.setProperty("timestamp", timestamp);
     entity.setProperty("imageBlob", imageBlob);
+    entity.setProperty("sentiment", sentimentScore);
     entity.setProperty("userId", userService.getCurrentUser().getUserId());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
