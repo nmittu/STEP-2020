@@ -105,46 +105,48 @@ function refreshComments() {
 
 function fetchData() {
     let limit = document.getElementById("limit").value;
+    let targetLang = document.getElementById("targetLang").value;
 
-    fetch(`/data?limit=${limit}&page=${page}`).then(response => response.json()).then(comments => {
-      let commentsContainer = document.getElementById("comments-container");
-      for (let comment of comments) {
-        let template = document.getElementById("comment-template");
-        let copy = template.content.cloneNode(true).querySelector(".comment");
+    fetch(`/data?limit=${limit}&targetLang=${targetLang}&page=${page}`)
+      .then(response => response.json()).then(comments => {
+        let commentsContainer = document.getElementById("comments-container");
+        for (let comment of comments) {
+          let template = document.getElementById("comment-template");
+          let copy = template.content.cloneNode(true).querySelector(".comment");
 
-        copy.querySelector(".display-name").innerText = comment.displayName;
-        let commentElement = copy.querySelector(".comment-content");
-        commentElement.innerText = comment.comment;
+          copy.querySelector(".display-name").innerText = comment.displayName;
+          let commentElement = copy.querySelector(".comment-content");
+          commentElement.innerText = comment.comment;
 
-        let commentImage = copy.querySelector(".comment-image");
-        if (comment.imageUrl != null) {
-          commentImage.classList.remove("hidden");
-          commentImage.src = comment.imageUrl
+          let commentImage = copy.querySelector(".comment-image");
+          if (comment.imageUrl != null) {
+            commentImage.classList.remove("hidden");
+            commentImage.src = comment.imageUrl
+          }
+
+          copy.style.visibility = "hidden";
+          commentsContainer.appendChild(copy);
+
+          let showMoreButton = copy.querySelector(".show-more");
+
+          if (commentElement.clientHeight === commentElement.scrollHeight) {
+            showMoreButton.style.display = "none";
+          }
+
+          let deleteButton = copy.querySelector(".delete-comment");
+          if (comment.isOwner){
+            deleteButton.addEventListener('click', () => {
+              deleteComment(comment.id);
+
+              refreshComments();
+            });
+          } else {
+            deleteButton.remove();
+          }
+
+          copy.style.visibility = "";
         }
-
-        copy.style.visibility = "hidden";
-        commentsContainer.appendChild(copy);
-
-        let showMoreButton = copy.querySelector(".show-more");
-
-        if (commentElement.clientHeight === commentElement.scrollHeight) {
-          showMoreButton.style.display = "none";
-        }
-
-        let deleteButton = copy.querySelector(".delete-comment");
-        if (comment.isOwner){
-          deleteButton.addEventListener('click', () => {
-            deleteComment(comment.id);
-
-            refreshComments();
-          });
-        } else {
-          deleteButton.remove();
-        }
-
-        copy.style.visibility = "";
-      }
-    });
+      });
 }
 
 
