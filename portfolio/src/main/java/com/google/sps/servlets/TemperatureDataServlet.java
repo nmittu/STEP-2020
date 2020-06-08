@@ -62,13 +62,13 @@ public class TemperatureDataServlet extends HttpServlet {
                 maxT = Math.max(maxT, Double.parseDouble(cells[3]));
               } else {
                 max = maxT;
-                maxT = Double.MIN_VALUE;
+                maxT = Double.parseDouble(cells[3]);
               }
+
+              lastYear = year;
             }
 
             temperatureData.put(date, new TempData(temp, max));
-
-            lastYear = year;
           }
         } catch (ParseException e) {
           continue;
