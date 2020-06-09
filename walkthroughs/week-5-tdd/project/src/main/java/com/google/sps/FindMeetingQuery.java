@@ -52,12 +52,7 @@ public final class FindMeetingQuery {
   }
 
   private List<TimeRange> getFreeTimes(List<Event> events) {
-    Collections.sort(events, new Comparator<Event>() {
-      @Override
-      public int compare(Event o1, Event o2) {
-        return TimeRange.ORDER_BY_START.compare(o1.getWhen(), o2.getWhen());
-      }
-    });
+    Collections.sort(events, (Event e1, Event e2) -> TimeRange.ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
     
     LinkedList<TimeRange> freeTimes = new LinkedList<>();
 
