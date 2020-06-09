@@ -37,12 +37,15 @@ public final class FindMeetingQuery {
     }
 
     List<TimeRange> freeTime = getFreeTimes(relevantEventsWithOpt);
-    freeTime.removeIf(new NotEnoughTime(request.getDuration()));
+
+    Predicate<TimeRange> notEnoughTime = (TimeRange x) -> x.duration() < request.getDuration();
+
+    freeTime.removeIf(notEnoughTime);
 
     // If there are no times check only mandatory attendees.
     if (freeTime.isEmpty() && !request.getAttendees().isEmpty()) {
       freeTime = getFreeTimes(relevantEvents);
-      freeTime.removeIf(new NotEnoughTime(request.getDuration()));
+      freeTime.removeIf(notEnoughTime);
     }
 
     return freeTime;
@@ -79,17 +82,5 @@ public final class FindMeetingQuery {
     freeTimes.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
 
     return freeTimes;
-  }
-
-  static class NotEnoughTime implements Predicate<TimeRange> {
-    private final long time;
-    public NotEnoughTime(long time) {
-      this.time = time;
-    }
-
-    @Override
-    public boolean test(TimeRange t) {
-      return t.duration() < time;
-    }
   }
 }

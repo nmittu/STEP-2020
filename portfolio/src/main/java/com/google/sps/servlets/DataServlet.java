@@ -31,6 +31,12 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.comments.Comment;
 import java.util.ArrayList;
@@ -52,7 +58,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/json;");
+    response.setContentType("text/json;charset=UTF-8");
 
     String limitString = request.getParameter("limit");
     int limit;
@@ -73,6 +79,10 @@ public class DataServlet extends HttpServlet {
       page = 1;
     }
 
+    String targetLang = getParameter(request, "targetLang", "en");
+
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+
     ArrayList<Comment> comments = new ArrayList<>();
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -86,13 +96,18 @@ public class DataServlet extends HttpServlet {
       String comment = (String) entity.getProperty("comment");
       String blobKey = (String) entity.getProperty("imageBlob");
       String imageUrl = getImageUrl(blobKey);
+      Double sentiment = (Double) entity.getProperty("sentiment");
 
       UserService userService = UserServiceFactory.getUserService();
       boolean isOwner = userService.isUserLoggedIn() &&
         ((String) entity.getProperty("userId")).equals(userService.getCurrentUser().getUserId());
       
-      comments.add(new Comment(id, displayName, comment, imageUrl, isOwner));
+      Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(targetLang));
+
+
+      comments.add(new Comment(id, displayName, translation.getTranslatedText(), imageUrl, isOwner, sentiment.floatValue()));
     }
+    
 
     Gson gson = new Gson();
     response.getWriter().println(gson.toJson(comments));
@@ -104,6 +119,14 @@ public class DataServlet extends HttpServlet {
     String comment = getParameter(request, "comment", "");
     long timestamp = System.currentTimeMillis();
     String imageBlob = getBlobKey(request, "image");
+    float sentimentScore;
+
+    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
+      Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+
+      sentimentScore = sentiment.getScore();
+    }
 
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
@@ -115,6 +138,7 @@ public class DataServlet extends HttpServlet {
     entity.setProperty("comment", comment);
     entity.setProperty("timestamp", timestamp);
     entity.setProperty("imageBlob", imageBlob);
+    entity.setProperty("sentiment", sentimentScore);
     entity.setProperty("userId", userService.getCurrentUser().getUserId());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

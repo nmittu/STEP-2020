@@ -22,13 +22,15 @@ public final class Comment {
   private final String comment;
   private final String imageUrl;
   private final boolean isOwner;
+  private final float sentiment;
 
-  public Comment(long id, String displayName, String comment, String imageUrl, boolean isOwner) {
+  public Comment(long id, String displayName, String comment, String imageUrl, boolean isOwner, float sentiment) {
     this.id = id;
     this.displayName = Objects.requireNonNull(displayName);
     this.comment = Objects.requireNonNull(comment);
     this.imageUrl = imageUrl;
     this.isOwner = isOwner;
+    this.sentiment = sentiment;
   }
 
   public long getId() {
@@ -49,5 +51,9 @@ public final class Comment {
 
   public boolean getIsOwner() {
     return isOwner;
+  }
+
+  public float getSentiment() {
+    return sentiment;
   }
 }

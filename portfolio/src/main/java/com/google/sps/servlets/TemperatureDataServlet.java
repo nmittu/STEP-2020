@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
@@ -31,13 +32,16 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/temperature-data")
 public class TemperatureDataServlet extends HttpServlet {
-	private final LinkedHashMap<Date, Double> temperatureData = new LinkedHashMap<>();
+	private final LinkedHashMap<Date, TempData> temperatureData = new LinkedHashMap<>();
 
   @Override
   public void init() {
     Scanner scanner = new Scanner(getServletContext().getResourceAsStream(
       "/WEB-INF/temperature_data.csv"
     ));
+
+    int lastYear = Integer.MIN_VALUE;
+    double maxT = Double.MIN_VALUE;
 
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
@@ -47,9 +51,24 @@ public class TemperatureDataServlet extends HttpServlet {
 
           if (cells.length >= 2) {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(cells[0]);
-            Double temp = Double .parseDouble(cells[1]);
+            int year = date.toInstant().atZone(ZoneId.systemDefault()).getYear();
 
-            temperatureData.put(date, temp);
+            Double temp = Double.parseDouble(cells[1]);
+
+            Double max = null;
+
+            if (cells.length >= 4) {
+              if (lastYear == year) {
+                maxT = Math.max(maxT, Double.parseDouble(cells[3]));
+              } else {
+                max = maxT;
+                maxT = Double.parseDouble(cells[3]);
+              }
+
+              lastYear = year;
+            }
+
+            temperatureData.put(date, new TempData(temp, max));
           }
         } catch (ParseException e) {
           continue;
@@ -65,5 +84,15 @@ public class TemperatureDataServlet extends HttpServlet {
     resp.setContentType("application/json");
     Gson gson = new Gson();
     resp.getWriter().println(gson.toJson(temperatureData));
+  }
+
+  static class TempData {
+    public Double avg;
+    public Double max;
+
+    public TempData(Double avg, Double max) {
+      this.avg = avg;
+      this.max = max;
+    }
   }
 }
